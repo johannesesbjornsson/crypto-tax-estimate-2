@@ -1,25 +1,32 @@
 from dataclasses import dataclass
 import datetime
 from decimal import Decimal
+from typing import Optional
 
-from .transaction_type import TransactionType
-from .transaction_source import TransactionSource
+@dataclass
+class TransactionSource:
+    venue: str
+    source_file: Optional[str]
 
 @dataclass
 class Transaction:
+    id: str
     timestamp: datetime
-
-    transaction_type: TransactionType
-
-    asset: str
-    amount: Decimal
-
-    quote_asset: str | None
-    quote_amount: Decimal | None
-
-    price: Decimal | None
-
-    fee_asset: str | None
-    fee_amount: Decimal | None
-
     source: TransactionSource
+
+@dataclass
+class Income(Transaction):
+    asset: str
+    amount: str
+
+
+@dataclass
+class Trade(Transaction):
+    from_asset: str
+    from_amount: Decimal
+
+    to_asset: str 
+    to_amount: Decimal 
+
+    fee_asset: str
+    fee_amount: Decimal
