@@ -10,6 +10,7 @@ from csv_converter.parsers.kraken.models import (
     KrakenStaking,
     KrakenWithdrawl,
 )
+from .normalizer import KrakenNormalizer
 
 
 class KrakenTransactionParser:
@@ -64,15 +65,16 @@ class KrakenTransactionParser:
     def parse(self, document: CSVDocument) -> list[KrakenTransaction]:
         transactions = []
         pening_insert = {}
+        normalizer = KrakenNormalizer() 
         for row in document.rows:
+            transaction = None
 
             if row['type'] == "trade":                        
                 if pening_insert:
                     if row['refid'] in pening_insert:
-                        trade_transaction = self.create_trade_transaction(pening_insert[row['refid']], row)
-                        transactions.append(trade_transaction)
+                        transaction = self.create_trade_transaction(pening_insert[row['refid']], row)
                         pening_insert.pop(row['refid'])
-                        print("ere")
+                        
                     else:
                         raise ValueError(f"Pending insert is not empty: {pening_insert}")
                 else:
@@ -88,7 +90,6 @@ class KrakenTransactionParser:
                     asset=self.santize_asset_name(row['asset']),
                     amount=row['amount']
                 )
-                transactions.append(transaction)
                 
             elif row['type'] == "deposit":
                 print(row)
@@ -103,7 +104,6 @@ class KrakenTransactionParser:
                     asset=self.santize_asset_name(row['asset']),
                     amount=row['amount']
                 )
-                transactions.append(transaction)
             elif row['type'] == "withdrawal":
                 transaction = KrakenWithdrawl(
                     tx_id=row['txid'],
@@ -115,14 +115,14 @@ class KrakenTransactionParser:
                     asset=self.santize_asset_name(row['asset']),
                     amount=row['amount']
                 )
-                transactions.append(transaction)
             
             elif row['type'] == "transfer":
                 pass
             else:
                 raise ValueError(f"unknown transaction type {row['type']}")
 
-
+            if transaction:
+                transactions.append(normalizer.normalize(transaction))
             
 
         return transactions
