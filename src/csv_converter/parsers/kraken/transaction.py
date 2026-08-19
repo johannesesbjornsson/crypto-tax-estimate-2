@@ -10,7 +10,7 @@ from csv_converter.parsers.kraken.models import (
     KrakenStaking,
     KrakenWithdrawl,
 )
-from .normalizer import KrakenNormalizer
+from .normaliser import Krakennormaliser
 
 
 class KrakenTransactionParser:
@@ -33,7 +33,7 @@ class KrakenTransactionParser:
             set(document.headers)
         )
 
-    def create_trade_transaction(self, sell_currenct: dict, buy_currency: dict) -> KrakenTrade:
+    def create_trade_transaction(self, sell_currenct: dict, buy_currency: dict, document_name: str) -> KrakenTrade:
         
         trade = KrakenTrade(
             tx_id=sell_currenct['txid'],
@@ -42,15 +42,14 @@ class KrakenTransactionParser:
                 sell_currenct["time"],
                 "%Y-%m-%d %H:%M:%S",
             ),
-            pair=sell_currenct['asset']+buy_currency['asset'],
-            side="BUY",
-            price=Decimal(Decimal(buy_currency['amount'])/abs(Decimal(sell_currenct["amount"]))),
-            base_currency=sell_currenct['asset'],
-            base_currency_amount=abs(Decimal(sell_currenct['amount'])),
-            quote_currency=buy_currency['asset'],
-            quote_currency_amount=Decimal(buy_currency['amount']),
+            price=Decimal(abs(Decimal(sell_currenct["amount"]))/Decimal(buy_currency['amount'])),
+            from_asset=sell_currenct['asset'],
+            from_asset_amount=abs(Decimal(sell_currenct['amount'])),
+            to_asset=buy_currency['asset'],
+            to_asset_amount=Decimal(buy_currency['amount']),
             fee=sell_currenct['fee'],
             fee_asset=sell_currenct['asset'],
+            source=document_name,
         )
         return trade
 
@@ -65,14 +64,14 @@ class KrakenTransactionParser:
     def parse(self, document: CSVDocument) -> list[KrakenTransaction]:
         transactions = []
         pening_insert = {}
-        normalizer = KrakenNormalizer() 
+        normaliser = Krakennormaliser() 
         for row in document.rows:
             transaction = None
 
             if row['type'] == "trade":                        
                 if pening_insert:
                     if row['refid'] in pening_insert:
-                        transaction = self.create_trade_transaction(pening_insert[row['refid']], row)
+                        transaction = self.create_trade_transaction(pening_insert[row['refid']], row, document.document_name)
                         pening_insert.pop(row['refid'])
                         
                     else:
@@ -88,12 +87,11 @@ class KrakenTransactionParser:
                         "%Y-%m-%d %H:%M:%S",
                     ),
                     asset=self.santize_asset_name(row['asset']),
-                    amount=row['amount']
+                    amount=row['amount'],
+                    source=document.document_name
                 )
                 
             elif row['type'] == "deposit":
-                print(row)
-                print(row['asset'])
                 transaction = KrakenDeposit(
                     tx_id=row['txid'],
                     ref_id=row['refid'],
@@ -102,7 +100,8 @@ class KrakenTransactionParser:
                         "%Y-%m-%d %H:%M:%S",
                     ),
                     asset=self.santize_asset_name(row['asset']),
-                    amount=row['amount']
+                    amount=row['amount'],
+                    source=document.document_name
                 )
             elif row['type'] == "withdrawal":
                 transaction = KrakenWithdrawl(
@@ -113,7 +112,8 @@ class KrakenTransactionParser:
                         "%Y-%m-%d %H:%M:%S",
                     ),
                     asset=self.santize_asset_name(row['asset']),
-                    amount=row['amount']
+                    amount=row['amount'],
+                    source=document.document_name
                 )
             
             elif row['type'] == "transfer":
@@ -122,7 +122,7 @@ class KrakenTransactionParser:
                 raise ValueError(f"unknown transaction type {row['type']}")
 
             if transaction:
-                transactions.append(normalizer.normalize(transaction))
+                transactions.append(normaliser.normalize(transaction))
             
 
         return transactions

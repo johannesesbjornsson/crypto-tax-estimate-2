@@ -23,5 +23,6 @@ class CSVReader:
 
         return CSVDocument(
             headers=headers,
+            document_name=file_path.name,
             rows=rows,
         )

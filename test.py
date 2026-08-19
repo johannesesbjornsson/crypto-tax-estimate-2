@@ -6,10 +6,11 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from csv_converter.reader.csv_reader import CSVReader
 from csv_converter.detection.detector import CSVFormatDetector
+from domain.models.transaction import Trade
 
 
 def main():
-    #csv_file = Path("downloaded_files/binance_2021-2022.csv")
+    #csv_file = Path("downloaded_files/binance_2023-2024.csv")
     csv_file = Path("downloaded_files/kraken_2023-2024.csv")
 
     # Read CSV
@@ -21,12 +22,7 @@ def main():
 
     print(f"\nRows: {len(document.rows)}")
 
-    # Detect format
-    #detector = CSVFormatDetector(
-    #    parsers=[
-    #        BinanceTradeParser(),
-    #    ]
-    #)
+
     detector = CSVFormatDetector()
     parser = detector.detect(document)
 
@@ -39,8 +35,9 @@ def main():
 
 
     for trade in trades:
-        
         print(trade)
+        #if isinstance(trade, Trade):
+        #    print(trade)
 
 
 if __name__ == "__main__":

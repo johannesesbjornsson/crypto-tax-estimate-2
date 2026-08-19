@@ -3,6 +3,7 @@ from decimal import Decimal
 import re 
 
 from csv_converter.reader.csv_document import CSVDocument
+from csv_converter.parsers.binance.normaliser import BinanceTradenormaliser
 from csv_converter.parsers.binance.models import (
     BinanceTrade,
 )
@@ -35,12 +36,14 @@ class BinanceTradeParser:
 
 
     def parse(self, document: CSVDocument) -> list[BinanceTrade]:
+
         trades = []
+        normaliser = BinanceTradenormaliser() 
 
         for row in document.rows:
             fee, fee_assset = self.parse_amount_asset_string(row["Fee"])
-            base_currency, base_currency_amount = self.parse_amount_asset_string(row["Executed"])
-            quote_currency, quote_currency_amount = self.parse_amount_asset_string(row["Amount"])
+            base_currency_amount, base_currency  = self.parse_amount_asset_string(row["Executed"])
+            quote_currency_amount, quote_currency = self.parse_amount_asset_string(row["Amount"])
 
             trade = BinanceTrade(
                 timestamp=datetime.strptime(
@@ -56,9 +59,10 @@ class BinanceTradeParser:
                 quote_currency_amount=quote_currency_amount,
                 fee=fee,
                 fee_asset=fee_assset,
+                source=document.document_name
             )
 
-            trades.append(trade)
+            trades.append(normaliser.normalize(trade))
 
         return trades
 

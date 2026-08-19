@@ -23,10 +23,12 @@ class Income(Transaction):
 @dataclass
 class Trade(Transaction):
     from_asset: str
-    from_amount: Decimal
+    from_asset_amount: Decimal
 
     to_asset: str 
-    to_amount: Decimal 
+    to_asset_amount: Decimal 
 
     fee_asset: str
     fee_amount: Decimal
+
+    exchange_rate: Decimal
