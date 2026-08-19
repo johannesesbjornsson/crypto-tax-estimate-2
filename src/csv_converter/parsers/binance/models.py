@@ -3,9 +3,11 @@ from datetime import datetime
 from decimal import Decimal
 
 @dataclass
-class BinanceTrade:
+class BinanceTransaction:
     timestamp: datetime
 
+@dataclass
+class BinanceTrade(BinanceTransaction):
     pair: str
     side: str
 
@@ -19,3 +21,5 @@ class BinanceTrade:
 
     fee: Decimal
     fee_asset: str
+
+    source: str

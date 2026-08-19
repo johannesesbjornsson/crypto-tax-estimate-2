@@ -7,19 +7,17 @@ class KrakenTransaction:
     timestamp: datetime
     tx_id: str
     ref_id: str
+    source: str
 
 @dataclass
 class KrakenTrade(KrakenTransaction):
-    pair: str
-    side: str
-
     price: Decimal
 
-    base_currency: str
-    base_currency_amount: Decimal
+    to_asset: str
+    to_asset_amount: Decimal
 
-    quote_currency: str
-    quote_currency_amount: Decimal
+    from_asset: str
+    from_asset_amount: Decimal
 
     fee: Decimal
     fee_asset: str
