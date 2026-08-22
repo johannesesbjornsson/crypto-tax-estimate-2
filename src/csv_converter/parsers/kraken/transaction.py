@@ -47,7 +47,7 @@ class KrakenTransactionParser:
             from_asset_amount=abs(Decimal(sell_currenct['amount'])),
             to_asset=buy_currency['asset'],
             to_asset_amount=Decimal(buy_currency['amount']),
-            fee=sell_currenct['fee'],
+            fee=Decimal(sell_currenct['fee']),
             fee_asset=sell_currenct['asset'],
             source=document_name,
         )
@@ -87,7 +87,7 @@ class KrakenTransactionParser:
                         "%Y-%m-%d %H:%M:%S",
                     ),
                     asset=self.santize_asset_name(row['asset']),
-                    amount=row['amount'],
+                    amount=Decimal(row['amount']),
                     source=document.document_name
                 )
                 
@@ -100,7 +100,7 @@ class KrakenTransactionParser:
                         "%Y-%m-%d %H:%M:%S",
                     ),
                     asset=self.santize_asset_name(row['asset']),
-                    amount=row['amount'],
+                    amount=Decimal(row['amount']),
                     source=document.document_name
                 )
             elif row['type'] == "withdrawal":
@@ -112,7 +112,7 @@ class KrakenTransactionParser:
                         "%Y-%m-%d %H:%M:%S",
                     ),
                     asset=self.santize_asset_name(row['asset']),
-                    amount=row['amount'],
+                    amount=Decimal(row['amount']),
                     source=document.document_name
                 )
             

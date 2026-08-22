@@ -17,7 +17,7 @@ class Transaction:
 @dataclass
 class Income(Transaction):
     asset: str
-    amount: str
+    amount: Decimal
 
 
 @dataclass
