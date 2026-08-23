@@ -1,0 +1,7 @@
+[flyway]
+locations = ["filesystem:db/migrations"]
+
+[environments.local]
+url = "jdbc:postgresql://localhost:5432/crypto_tax"
+user = "postgres"
+password = "password"

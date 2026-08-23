@@ -27,7 +27,7 @@ class BinanceTradeParser:
         )
 
     def parse_amount_asset_string(self, asset_string: str) -> tuple[Decimal, str]:
-        m = re.search('([0-9\.]+)([A-Z]+)', asset_string)
+        m = re.search('([0-9.]+)([A-Z]+)', asset_string)
         if m:
             return Decimal(m.group(1)), m.group(2)
         else:
