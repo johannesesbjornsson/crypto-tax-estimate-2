@@ -32,3 +32,15 @@ class Trade(Transaction):
     fee_amount: Decimal
 
     exchange_rate: Decimal
+
+@dataclass
+class Deposit(Transaction):
+    asset: str
+    amount: Decimal
+
+
+@dataclass
+class Withdrawl(Transaction):
+    asset: str
+    amount: Decimal
+    

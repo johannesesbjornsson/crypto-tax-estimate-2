@@ -9,6 +9,8 @@ from database.base import Base
 if TYPE_CHECKING:
     from database.models.trade import TradeModel
     from database.models.income import IncomeModel
+    from database.models.withdrawl import WithdrawlModel
+    from database.models.deposit import DepositModel
 
 
 class TransactionModel(Base):
@@ -43,6 +45,20 @@ class TransactionModel(Base):
 
     income: Mapped["IncomeModel | None"] = relationship(
         "IncomeModel",
+        back_populates="transaction",
+        cascade="all, delete-orphan",
+        uselist=False,
+    )
+
+    withdrawl: Mapped["WithdrawlModel | None"] = relationship(
+        "WithdrawlModel",
+        back_populates="transaction",
+        cascade="all, delete-orphan",
+        uselist=False,
+    )
+
+    deposit: Mapped["DepositModel | None"] = relationship(
+        "DepositModel",
         back_populates="transaction",
         cascade="all, delete-orphan",
         uselist=False,

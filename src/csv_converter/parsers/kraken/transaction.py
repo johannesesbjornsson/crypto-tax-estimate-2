@@ -1,6 +1,9 @@
 from datetime import datetime
 from decimal import Decimal
 import re
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 from csv_converter.reader.csv_document import CSVDocument
 from csv_converter.parsers.kraken.models import (
@@ -64,7 +67,8 @@ class KrakenTransactionParser:
     def parse(self, document: CSVDocument) -> list[KrakenTransaction]:
         transactions = []
         pening_insert = {}
-        normaliser = Krakennormaliser() 
+        normaliser = Krakennormaliser()
+        skipped_transactions = 0
         for row in document.rows:
             transaction = None
 
@@ -77,6 +81,7 @@ class KrakenTransactionParser:
                     else:
                         raise ValueError(f"Pending insert is not empty: {pening_insert}")
                 else:
+                    skipped_transactions += 1
                     pening_insert[row['refid']] = row
             elif row['type'] == "staking" or row['type'] == "earn":
                 transaction = KrakenStaking(
@@ -112,18 +117,23 @@ class KrakenTransactionParser:
                         "%Y-%m-%d %H:%M:%S",
                     ),
                     asset=self.santize_asset_name(row['asset']),
-                    amount=Decimal(row['amount']),
+                    amount=abs(Decimal(row['amount'])),
                     source=document.document_name
                 )
             
             elif row['type'] == "transfer":
-                pass
+                skipped_transactions += 1
             else:
                 raise ValueError(f"unknown transaction type {row['type']}")
 
             if transaction:
-                transactions.append(normaliser.normalize(transaction))
-            
+                transactions.append(normaliser.normalise(transaction))
+
+        number_of_parsed_transactions = len(transactions)
+        if number_of_parsed_transactions != (document.number_data_rows - skipped_transactions):
+            raise ValueError("Unexpected number of transactions pared")
+        
+        logger.info(f"Parsed {number_of_parsed_transactions} transactions")
 
         return transactions
 

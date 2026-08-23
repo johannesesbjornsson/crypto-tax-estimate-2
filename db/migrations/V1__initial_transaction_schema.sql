@@ -25,3 +25,19 @@ CREATE TABLE trades (
     fee_amount NUMERIC(38, 18) NOT NULL,
     exchange_rate NUMERIC(38, 18) NOT NULL
 );
+
+CREATE TABLE deposit (
+    id VARCHAR(255) PRIMARY KEY
+        REFERENCES transactions(id)
+        ON DELETE CASCADE,
+    asset VARCHAR(20) NOT NULL,
+    amount NUMERIC(38, 18) NOT NULL
+);
+
+CREATE TABLE withdrawl (
+    id VARCHAR(255) PRIMARY KEY
+        REFERENCES transactions(id)
+        ON DELETE CASCADE,
+    asset VARCHAR(20) NOT NULL,
+    amount NUMERIC(38, 18) NOT NULL
+);

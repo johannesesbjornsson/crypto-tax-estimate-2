@@ -1,29 +1,52 @@
-from domain.models.transaction import Transaction, Income, Trade, TransactionSource
+from domain.models.transaction import Transaction, Income, Trade, TransactionSource, Withdrawl, Deposit
 from .transaction import KrakenTransaction, KrakenTrade, KrakenStaking, KrakenDeposit, KrakenWithdrawl
 
 class Krakennormaliser:
 
-    def normalize(self, transaction: KrakenTransaction) -> Transaction:
+    def normalise(self, transaction: KrakenTransaction) -> Transaction:
 
         if isinstance(transaction, KrakenTrade):
-            return self.normalize_trade(transaction)
+            return self.normalise_trade(transaction)
 
         if isinstance(transaction, KrakenDeposit):
-            return
+            return self.normalise_deposit(transaction)
 
         if isinstance(transaction, KrakenWithdrawl):
-            return
+            return self.normalise_withdrawl(transaction)
 
         if isinstance(transaction, KrakenStaking):
-            return self.normalize_staking(transaction)
+            return self.normalise_staking(transaction)
 
         raise ValueError(
             f"Unsupported Kraken transaction: "
             f"{type(transaction).__name__}"
         )
 
-    def normalize_trade(self, trade: KrakenTrade) -> Trade:
-        print(trade)
+
+    def normalise_withdrawl(self, withdrawl: KrakenWithdrawl) -> Withdrawl:
+        return Withdrawl(
+            id=withdrawl.tx_id,
+            timestamp=withdrawl.timestamp,   
+            asset=withdrawl.asset,
+            amount=withdrawl.amount,
+            source=TransactionSource(
+                venue="kraken",
+                source_file=withdrawl.source
+            ), 
+        )
+
+    def normalise_deposit(self, deposit: KrakenDeposit) -> Deposit:
+        return Deposit(
+            id=deposit.tx_id,
+            timestamp=deposit.timestamp,   
+            asset=deposit.asset,
+            amount=deposit.amount,
+            source=TransactionSource(
+                venue="kraken",
+                source_file=deposit.source
+            ), 
+        )
+    def normalise_trade(self, trade: KrakenTrade) -> Trade:
         return Trade(
             id=trade.tx_id,
             timestamp=trade.timestamp,
@@ -39,7 +62,7 @@ class Krakennormaliser:
                 source_file=trade.source
             ),
         )
-    def normalize_staking(self, staking: KrakenStaking) -> Income:
+    def normalise_staking(self, staking: KrakenStaking) -> Income:
         return Income(
             id=staking.tx_id,
             timestamp=staking.timestamp,
@@ -47,6 +70,6 @@ class Krakennormaliser:
             amount=staking.amount,
             source=TransactionSource(
                 venue="kraken",
-                source_file=None
+                source_file=staking.source
             ),
         )

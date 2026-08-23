@@ -1,5 +1,6 @@
 from typing import Protocol
 import logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 from csv_converter.reader.csv_document import CSVDocument
@@ -35,6 +36,6 @@ class CSVFormatDetector:
             raise ValueError("Ambiguous CSV format")
 
         
-        logger.info(f"Detected format {matches[0]}")
+        logger.info(f"Detected format: {type(matches[0]).__name__}")
         
         return matches[0]

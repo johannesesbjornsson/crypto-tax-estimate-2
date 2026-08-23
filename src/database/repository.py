@@ -1,9 +1,11 @@
 from sqlalchemy.orm import Session
 
-from domain.models.transaction import Trade, Income
+from domain.models.transaction import Trade, Income, Deposit, Withdrawl
 from database.models.transaction import TransactionModel
 from database.models.trade import TradeModel
 from database.models.income import IncomeModel
+from database.models.deposit import DepositModel
+from database.models.withdrawl import WithdrawlModel
 
 
 class TransactionRepository:
@@ -17,7 +19,12 @@ class TransactionRepository:
 
         elif isinstance(transaction, Income):
             self._save_income(transaction)
-
+            
+        elif isinstance(transaction, Deposit):
+            self._save_deposit(transaction)
+            
+        elif isinstance(transaction, Withdrawl):
+            self._save_withdrawl(transaction)
         else:
             raise ValueError(
                 f"Unsupported transaction type: "
@@ -64,6 +71,42 @@ class TransactionRepository:
 
         self.session.add(transaction)
         self.session.add(income_model)
+
+    def _save_withdrawl(self, withdrawl: Withdrawl):
+
+        transaction = TransactionModel(
+            id=withdrawl.id,
+            timestamp=withdrawl.timestamp,
+            venue=withdrawl.source.venue,
+            source_file=withdrawl.source.source_file,
+        )
+
+        withdrawl_model = WithdrawlModel(
+            id=withdrawl.id,
+            asset=withdrawl.asset,
+            amount=withdrawl.amount,
+        )
+
+        self.session.add(transaction)
+        self.session.add(withdrawl_model)
+
+    def _save_deposit(self, deposit: Deposit):
+
+        transaction = TransactionModel(
+            id=deposit.id,
+            timestamp=deposit.timestamp,
+            venue=deposit.source.venue,
+            source_file=deposit.source.source_file,
+        )
+
+        deposit_model = DepositModel(
+            id=deposit.id,
+            asset=deposit.asset,
+            amount=deposit.amount,
+        )
+
+        self.session.add(transaction)
+        self.session.add(deposit_model)
 
     def commit(self):
         self.session.commit()

@@ -12,26 +12,20 @@ from database.repository import TransactionRepository
 
 def main():
     csv_file = Path("downloaded_files/kraken_2023-2024.csv")
+    #csv_file = Path("downloaded_files/binance_2023-2024.csv")
 
     # Read CSV
     reader = CSVReader()
     document = reader.read(csv_file)
 
-    print("Headers:")
-    print(document.headers)
-
-    print(f"\nRows: {len(document.rows)}")
-
     # Detect format
     detector = CSVFormatDetector()
     parser = detector.detect(document)
 
-    print(f"\nDetected parser: {type(parser).__name__}")
 
-    # Parse + normalize
+    # Parse + normalise
     transactions = parser.parse(document)
 
-    print(f"Parsed transactions: {len(transactions)}")
 
     # Write to database
     session = get_session()
@@ -40,14 +34,16 @@ def main():
         repository = TransactionRepository(session)
 
         for transaction in transactions:
-            print(transaction)
+            #print(transaction)
+            
+            
             if transaction:
                 repository.save(transaction)
 
 
         repository.commit()
 
-        print(f"\nSaved {len(transactions)} transactions")
+        
 
     except Exception:
         session.rollback()
