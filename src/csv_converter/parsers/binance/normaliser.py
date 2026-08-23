@@ -6,7 +6,7 @@ class BinanceTradenormaliser:
 
 
 
-    def normalize(self, trade: BinanceTrade) -> Transaction:
+    def normalise(self, trade: BinanceTrade) -> Transaction:
         if trade.side == "BUY":
             from_asset = trade.quote_currency
             from_asset_amount = trade.quote_currency_amount

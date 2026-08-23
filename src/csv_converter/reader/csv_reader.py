@@ -25,4 +25,5 @@ class CSVReader:
             headers=headers,
             document_name=file_path.name,
             rows=rows,
+            number_data_rows=len(rows)
         )

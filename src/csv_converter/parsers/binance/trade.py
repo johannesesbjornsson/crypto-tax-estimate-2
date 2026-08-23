@@ -2,6 +2,10 @@ from datetime import datetime
 from decimal import Decimal
 import re 
 
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 from csv_converter.reader.csv_document import CSVDocument
 from csv_converter.parsers.binance.normaliser import BinanceTradenormaliser
 from csv_converter.parsers.binance.models import (
@@ -62,7 +66,11 @@ class BinanceTradeParser:
                 source=document.document_name
             )
 
-            trades.append(normaliser.normalize(trade))
+            trades.append(normaliser.normalise(trade))
 
+        number_of_parsed_transactions = len(trades)
+        if number_of_parsed_transactions != document.number_data_rows:
+            raise ValueError("Unexpected number of transactions pared")
+        logger.info(f"Parsed {number_of_parsed_transactions} transactions")
         return trades
 
