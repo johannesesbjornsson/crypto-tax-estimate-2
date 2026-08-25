@@ -11,10 +11,9 @@ if TYPE_CHECKING:
 
 
 class WithdrawlModel(Base):
-    __tablename__ = "withdrawl"
+    __tablename__ = "withdrawals"
 
-    id: Mapped[str] = mapped_column(
-        String(255),
+    id: Mapped[int] = mapped_column(
         ForeignKey("transactions.id", ondelete="CASCADE"),
         primary_key=True,
     )

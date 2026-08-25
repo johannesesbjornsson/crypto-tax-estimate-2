@@ -11,13 +11,13 @@ if TYPE_CHECKING:
 
 
 class IncomeModel(Base):
-    __tablename__ = "income"
+    __tablename__ = "incomes"
 
-    id: Mapped[str] = mapped_column(
-        String(255),
+    id: Mapped[int] = mapped_column(
         ForeignKey("transactions.id", ondelete="CASCADE"),
         primary_key=True,
     )
+
 
     asset: Mapped[str] = mapped_column(
         String(20),

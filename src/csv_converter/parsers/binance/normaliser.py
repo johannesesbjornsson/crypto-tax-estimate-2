@@ -27,7 +27,7 @@ class BinanceTradenormaliser:
         fee_amount = trade.fee
 
         return Trade(
-            id=f"{trade.timestamp}-{trade.pair}-{trade.base_currency_amount}-{trade.quote_currency_amount}-{trade.price}",
+            venue_txn_id=None,
             timestamp=trade.timestamp,
             from_asset=from_asset,
             from_asset_amount=from_asset_amount,

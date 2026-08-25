@@ -16,9 +16,14 @@ if TYPE_CHECKING:
 class TransactionModel(Base):
     __tablename__ = "transactions"
 
-    id: Mapped[str] = mapped_column(
-        String(255),
+    id: Mapped[int] = mapped_column(
         primary_key=True,
+        autoincrement=True,
+    )
+
+    venue_txn_id: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True,
     )
 
     timestamp: Mapped[datetime] = mapped_column(
@@ -36,6 +41,11 @@ class TransactionModel(Base):
         nullable=True,
     )
 
+    checksum: Mapped[str] = mapped_column(
+        String(64),
+        nullable=False,
+    )
+
     trade: Mapped["TradeModel | None"] = relationship(
         "TradeModel",
         back_populates="transaction",
@@ -50,15 +60,15 @@ class TransactionModel(Base):
         uselist=False,
     )
 
-    withdrawl: Mapped["WithdrawlModel | None"] = relationship(
-        "WithdrawlModel",
+    deposit: Mapped["DepositModel | None"] = relationship(
+        "DepositModel",
         back_populates="transaction",
         cascade="all, delete-orphan",
         uselist=False,
     )
 
-    deposit: Mapped["DepositModel | None"] = relationship(
-        "DepositModel",
+    withdrawl: Mapped["WithdrawlModel | None"] = relationship(
+        "WithdrawlModel",
         back_populates="transaction",
         cascade="all, delete-orphan",
         uselist=False,
