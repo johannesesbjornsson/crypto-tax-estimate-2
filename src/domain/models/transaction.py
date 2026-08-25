@@ -1,16 +1,16 @@
 from dataclasses import dataclass
 import datetime
 from decimal import Decimal
-from typing import Optional
+import hashlib
 
 @dataclass
 class TransactionSource:
     venue: str
-    source_file: Optional[str]
+    source_file: str | None
 
 @dataclass
 class Transaction:
-    id: str
+    venue_txn_id: str | None
     timestamp: datetime
     source: TransactionSource
 
@@ -18,6 +18,17 @@ class Transaction:
 class Income(Transaction):
     asset: str
     amount: Decimal
+    @property
+    def checksum(self) -> str:
+        data = "|".join([
+            self.timestamp.isoformat(),
+            self.source.venue,
+            str(self.amount),
+            self.asset,
+            
+        ])
+
+        return hashlib.sha256(data.encode("utf-8")).hexdigest()
 
 
 @dataclass
@@ -33,14 +44,53 @@ class Trade(Transaction):
 
     exchange_rate: Decimal
 
+    @property
+    def checksum(self) -> str:
+        data = "|".join([
+            self.timestamp.isoformat(),
+            self.source.venue,
+            self.from_asset,
+            str(self.from_asset_amount),
+            self.to_asset,
+            str(self.to_asset_amount),
+            self.fee_asset,
+            str(self.fee_amount),
+            str(self.exchange_rate),
+        ])
+
+        return hashlib.sha256(data.encode("utf-8")).hexdigest()
+
 @dataclass
 class Deposit(Transaction):
     asset: str
     amount: Decimal
+    
+    @property
+    def checksum(self) -> str:
+        data = "|".join([
+            self.timestamp.isoformat(),
+            self.source.venue,
+            str(self.amount),
+            self.asset,
+            
+        ])
+
+        return hashlib.sha256(data.encode("utf-8")).hexdigest()
 
 
 @dataclass
 class Withdrawl(Transaction):
     asset: str
     amount: Decimal
+    @property
+    def checksum(self) -> str:
+        data = "|".join([
+            self.timestamp.isoformat(),
+            self.source.venue,
+            str(self.amount),
+            self.asset,
+            
+        ])
+
+        return hashlib.sha256(data.encode("utf-8")).hexdigest()
     

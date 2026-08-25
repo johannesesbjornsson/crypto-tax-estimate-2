@@ -25,7 +25,7 @@ class Krakennormaliser:
 
     def normalise_withdrawl(self, withdrawl: KrakenWithdrawl) -> Withdrawl:
         return Withdrawl(
-            id=withdrawl.tx_id,
+            venue_txn_id=withdrawl.tx_id,
             timestamp=withdrawl.timestamp,   
             asset=withdrawl.asset,
             amount=withdrawl.amount,
@@ -37,7 +37,7 @@ class Krakennormaliser:
 
     def normalise_deposit(self, deposit: KrakenDeposit) -> Deposit:
         return Deposit(
-            id=deposit.tx_id,
+            venue_txn_id=deposit.tx_id,
             timestamp=deposit.timestamp,   
             asset=deposit.asset,
             amount=deposit.amount,
@@ -48,7 +48,7 @@ class Krakennormaliser:
         )
     def normalise_trade(self, trade: KrakenTrade) -> Trade:
         return Trade(
-            id=trade.tx_id,
+            venue_txn_id=trade.tx_id,
             timestamp=trade.timestamp,
             from_asset=trade.from_asset,
             from_asset_amount=trade.from_asset_amount,
@@ -64,7 +64,7 @@ class Krakennormaliser:
         )
     def normalise_staking(self, staking: KrakenStaking) -> Income:
         return Income(
-            id=staking.tx_id,
+            venue_txn_id=staking.tx_id,
             timestamp=staking.timestamp,
             asset=staking.asset,
             amount=staking.amount,

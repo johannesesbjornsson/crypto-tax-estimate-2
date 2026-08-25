@@ -13,8 +13,7 @@ if TYPE_CHECKING:
 class TradeModel(Base):
     __tablename__ = "trades"
 
-    id: Mapped[str] = mapped_column(
-        String(255),
+    id: Mapped[int] = mapped_column(
         ForeignKey("transactions.id", ondelete="CASCADE"),
         primary_key=True,
     )
