@@ -15,6 +15,7 @@ def main():
     csv_file = Path("downloaded_files/kraken_2023-2024.csv")
     #csv_file = Path("downloaded_files/binance_2023-2024.csv")
     #csv_file = Path("downloaded_files/Bank of England  Database.csv")
+    csv_file = Path("/Users/johannesesbjornsson/Documents/workspace/crypto-tax-estimate-2/tests/csv_converter/sample_csv/binance_klines.csv")
 
     # Read CSV
     reader = CSVReader()
@@ -41,7 +42,7 @@ def main():
             
             
             
-            repository.save(transaction)
+            #repository.save(transaction)
 
 
         repository.commit()
