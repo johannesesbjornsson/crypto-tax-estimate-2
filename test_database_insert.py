@@ -7,12 +7,14 @@ from csv_converter.reader.csv_reader import CSVReader
 from csv_converter.detection.detector import CSVFormatDetector
 
 from database.session import get_session
-from database.repository import TransactionRepository
+from database.repositories.transaction_repository import TransactionRepository
+from database.repositories.exchange_rate_repository import ExchangeRateRepository
 
 
 def main():
     csv_file = Path("downloaded_files/kraken_2023-2024.csv")
     #csv_file = Path("downloaded_files/binance_2023-2024.csv")
+    #csv_file = Path("downloaded_files/Bank of England  Database.csv")
 
     # Read CSV
     reader = CSVReader()
@@ -32,13 +34,14 @@ def main():
 
     try:
         repository = TransactionRepository(session)
+        #repository = ExchangeRateRepository(session)
 
         for transaction in transactions:
-            #print(transaction)
+            print(transaction)
             
             
-            if transaction:
-                repository.save(transaction)
+            
+            repository.save(transaction)
 
 
         repository.commit()

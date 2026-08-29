@@ -1,6 +1,7 @@
 from csv_converter.parsers.binance.models import BinanceTrade
 from decimal import Decimal
-from domain.models.transaction import Transaction, TransactionSource, Trade
+from domain.models.source import Source
+from domain.models.transaction import Transaction, Trade
 
 class BinanceTradenormaliser:
 
@@ -36,7 +37,7 @@ class BinanceTradenormaliser:
             fee_asset=fee_asset,
             fee_amount=fee_amount,
             exchange_rate=exchange_rate,
-            source=TransactionSource(
+            source=Source(
                 venue="binance",
                 source_file=trade.source
             ),
