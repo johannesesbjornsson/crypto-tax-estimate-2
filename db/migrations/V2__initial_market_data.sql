@@ -18,7 +18,7 @@ CREATE TABLE exchange_rates (
     rate NUMERIC(38, 18) NOT NULL,
     source VARCHAR(50) NOT NULL,
 
-    UNIQUE (timestamp, from_currency, to_currency, source)
+    UNIQUE (timestamp, from_currency, to_currency)
 );
 
 CREATE INDEX idx_market_prices_lookup

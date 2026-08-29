@@ -1,18 +1,16 @@
 from dataclasses import dataclass
 import datetime
 from decimal import Decimal
+from .source import Source
 import hashlib
 
-@dataclass
-class TransactionSource:
-    venue: str
-    source_file: str | None
+
 
 @dataclass
 class Transaction:
     venue_txn_id: str | None
     timestamp: datetime
-    source: TransactionSource
+    source: Source
 
 @dataclass
 class Income(Transaction):

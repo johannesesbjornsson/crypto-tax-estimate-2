@@ -26,8 +26,12 @@ psql "postgresql://postgres:password@localhost:5432/crypto_tax"
 pytest tests/csv_converter/
 ```
 
-Download USD/GBP data from here: 
-https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html 
+
+Download USD/EUR data from here: 
+https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-usd.en.html ```
+
+Download USD/GBP data from here
+https://www.bankofengland.co.uk/boeapps/database/Rates.asp?Travel=NIxIRx&into=GBP
 
 
 Download Binance marketdata from here

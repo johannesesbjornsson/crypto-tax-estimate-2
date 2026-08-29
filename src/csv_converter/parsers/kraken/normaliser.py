@@ -1,4 +1,5 @@
-from domain.models.transaction import Transaction, Income, Trade, TransactionSource, Withdrawl, Deposit
+from domain.models.transaction import Transaction, Income, Trade, Withdrawl, Deposit
+from domain.models.source import Source
 from .transaction import KrakenTransaction, KrakenTrade, KrakenStaking, KrakenDeposit, KrakenWithdrawl
 
 class Krakennormaliser:
@@ -29,7 +30,7 @@ class Krakennormaliser:
             timestamp=withdrawl.timestamp,   
             asset=withdrawl.asset,
             amount=withdrawl.amount,
-            source=TransactionSource(
+            source=Source(
                 venue="kraken",
                 source_file=withdrawl.source
             ), 
@@ -41,7 +42,7 @@ class Krakennormaliser:
             timestamp=deposit.timestamp,   
             asset=deposit.asset,
             amount=deposit.amount,
-            source=TransactionSource(
+            source=Source(
                 venue="kraken",
                 source_file=deposit.source
             ), 
@@ -57,7 +58,7 @@ class Krakennormaliser:
             fee_asset=trade.fee_asset,
             fee_amount=trade.fee,
             exchange_rate=trade.price,
-            source=TransactionSource(
+            source=Source(
                 venue="kraken",
                 source_file=trade.source
             ),
@@ -68,7 +69,7 @@ class Krakennormaliser:
             timestamp=staking.timestamp,
             asset=staking.asset,
             amount=staking.amount,
-            source=TransactionSource(
+            source=Source(
                 venue="kraken",
                 source_file=staking.source
             ),
