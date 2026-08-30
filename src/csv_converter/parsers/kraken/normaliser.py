@@ -1,6 +1,6 @@
 from domain.models.transaction import Transaction, Income, Trade, Withdrawl, Deposit
 from domain.models.source import Source
-from .transaction import KrakenTransaction, KrakenTrade, KrakenStaking, KrakenDeposit, KrakenWithdrawl
+from .parser import KrakenTransaction, KrakenTrade, KrakenStaking, KrakenDeposit, KrakenWithdrawl
 
 class Krakennormaliser:
 

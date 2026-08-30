@@ -2,7 +2,7 @@ from pathlib import Path
 from decimal import Decimal
 
 from csv_converter.reader.csv_reader import CSVReader
-from csv_converter.parsers.bank_of_england.exchange_rate import BankOfEnglandUSDtoGBPParser
+from csv_converter.parsers.bank_of_england.parser import BankOfEnglandUSDtoGBPParser
 from domain.models.exchange_rate import ExchangeRate
 
 

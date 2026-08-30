@@ -22,8 +22,6 @@ class BinanceKlineParser:
         "ignore",
     }
     def can_parse(self, document: CSVDocument) -> bool:
-        print(self.REQUIRED_COLUMNS)
-        print(document.headers)
         return self.REQUIRED_COLUMNS.issubset(
             set(document.headers)
         )
@@ -59,7 +57,6 @@ class BinanceKlineParser:
             asset=asset,
             quote_currency=quote_currency
         )
-        print(kline)
         return kline
 
     def parse_candles(self, document: CSVDocument, asset:str, quote_currency:str) -> list[BinanceKline]:

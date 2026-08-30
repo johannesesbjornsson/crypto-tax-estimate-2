@@ -21,30 +21,47 @@ def main():
 
     reader = CSVReader()
 
-    for zip_file in zip_files:
-        with zipfile.ZipFile(zip_file, "r") as archive:
-            csv_name = archive.namelist()[0]
+    
+    session = get_session()
+    repository = ExchangeRateRepository(session)
+    try:
+        for zip_file in zip_files:
+            with zipfile.ZipFile(zip_file, "r") as archive:
+                csv_name = archive.namelist()[0]
 
-            m = re.search('(^[A-Z]+)(USDT)', csv_name)
+                m = re.search('(^[A-Z]+)(USDT)', csv_name)
 
-            if m:
-                asset = m.group(1)
-                quote_currency = m.group(2)
-            else:
-                raise(f"Unable to match pair from {csv_name}")
+                if m:
+                    asset = m.group(1)
+                    quote_currency = m.group(2)
+                else:
+                    raise(f"Unable to match pair from {csv_name}")
 
 
-            with archive.open(csv_name) as csv_file:
-                content = csv_file.read().decode("utf-8")
+                with archive.open(csv_name) as csv_file:
+                    content = csv_file.read().decode("utf-8")
 
-                document = reader.read_content(
-                    content=content, 
-                    document_name=csv_name,
-                    custom_headers=["open time", "open", "high", "low", "close", "volume", "close time", "quote asset volume", "number of trades", "taker buy base asset volume", "taker buy quote asset volume", "ignore"]
-                )
-                detector = CSVFormatDetector()
-                parser = detector.detect(document)
-                marketdata = parser.parse(document, asset=asset, quote_currency=quote_currency)
+                    document = reader.read_content(
+                        content=content, 
+                        document_name=csv_name,
+                        custom_headers=["open time", "open", "high", "low", "close", "volume", "close time", "quote asset volume", "number of trades", "taker buy base asset volume", "taker buy quote asset volume", "ignore"]
+                    )
+                    detector = CSVFormatDetector()
+                    parser = detector.detect(document)
+                    marketdata = parser.parse(document, asset=asset, quote_currency=quote_currency)
+
+                    for md in marketdata:
+                        repository.save(md)
+
+
+                    repository.commit()    
+        
+    except Exception:
+        session.rollback()
+        raise
+    
+    finally:
+        session.close()
 
 
 
