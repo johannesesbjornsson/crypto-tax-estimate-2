@@ -11,7 +11,7 @@ from domain.models.source import Source
 
 
 
-class BankOfEnglandUSDtoGBP:
+class BankOfEnglandUSDtoGBPParser:
     RATE_HEADER="Spot exchange rate, US $ into Sterling  						[a] [a] [a] 						XUDLUSS"
     REQUIRED_COLUMNS = {
         RATE_HEADER,

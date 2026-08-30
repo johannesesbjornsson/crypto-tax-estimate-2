@@ -1,10 +1,10 @@
 from csv_converter.reader.csv_reader import CSVReader
 from csv_converter.detection.detector import CSVFormatDetector
 from pathlib import Path
-from csv_converter.parsers.kraken.transaction import KrakenTransactionParser
-from csv_converter.parsers.binance.trade import BinanceTradeParser
+from csv_converter.parsers.kraken.parser import KrakenTransactionParser
+from csv_converter.parsers.binance.parser import BinanceTradeParser
 
-def test_kraken_detector():
+def test_format_detector():
     file_path = Path("tests/csv_converter/sample_csv/kraken_v1.csv")
 
     reader = CSVReader()

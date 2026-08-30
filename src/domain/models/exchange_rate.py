@@ -11,3 +11,14 @@ class ExchangeRate:
     to_currency: str
     exchange_rate: Decimal
 
+
+@dataclass
+class MarketPrice:
+    timestamp: datetime
+    source: Source
+    asset: str
+    quote_currency: str
+    interval: str
+    price: Decimal
+    
+

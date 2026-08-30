@@ -2,7 +2,7 @@ from pathlib import Path
 from decimal import Decimal
 
 from csv_converter.reader.csv_reader import CSVReader
-from csv_converter.parsers.kraken.transaction import KrakenTransactionParser
+from csv_converter.parsers.kraken.parser import KrakenTransactionParser
 from domain.models.transaction import Trade, Income
 
 

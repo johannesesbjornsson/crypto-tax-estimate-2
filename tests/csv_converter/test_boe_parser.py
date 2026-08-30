@@ -2,17 +2,17 @@ from pathlib import Path
 from decimal import Decimal
 
 from csv_converter.reader.csv_reader import CSVReader
-from csv_converter.parsers.bank_of_england.exchange_rate import BankOfEnglandUSDtoGBP
+from csv_converter.parsers.bank_of_england.parser import BankOfEnglandUSDtoGBPParser
 from domain.models.exchange_rate import ExchangeRate
 
 
-def test_kraken_parser():
+def test_bank_of_england_parser():
     file_path = Path("tests/csv_converter/sample_csv/boe_database.csv")
 
     reader = CSVReader()
     document = reader.read(file_path)
 
-    parser = BankOfEnglandUSDtoGBP()
+    parser = BankOfEnglandUSDtoGBPParser()
 
     exchange_rates = parser.parse(document)
 

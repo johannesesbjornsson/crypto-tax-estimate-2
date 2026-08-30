@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 
-from domain.models.exchange_rate import ExchangeRate
+from domain.models.exchange_rate import ExchangeRate, MarketPrice
 
 from database.models.exchange_rate import ExchangeRateModel
+from database.models.market_price import MarketPriceModel
 
 
 class ExchangeRateRepository:
@@ -13,6 +14,8 @@ class ExchangeRateRepository:
     def save(self, rate):
         if isinstance(rate, ExchangeRate):
             self._save_exchange_rate(rate)
+        elif isinstance(rate, MarketPrice):
+            self._save_market_price(rate)
 
         else:
             raise ValueError(
@@ -25,6 +28,18 @@ class ExchangeRateRepository:
             to_currency=rate.to_currency,
             rate=rate.exchange_rate,
             timestamp=rate.timestamp,
+            source=rate.source.source_file,
+        )
+
+        self.session.add(exchange_rate)
+
+    def _save_market_price(self, rate: MarketPrice):
+        exchange_rate = MarketPriceModel(
+            asset=rate.asset,
+            quote_currency=rate.quote_currency,
+            price=rate.price,
+            timestamp=rate.timestamp,
+            interval=rate.interval,
             source=rate.source.source_file,
         )
 

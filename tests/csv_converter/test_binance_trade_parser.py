@@ -2,7 +2,7 @@ from pathlib import Path
 from decimal import Decimal
 
 from csv_converter.reader.csv_reader import CSVReader
-from csv_converter.parsers.binance.trade import BinanceTradeParser
+from csv_converter.parsers.binance.parser import BinanceTradeParser
 from domain.models.transaction import Trade, Income
 
 

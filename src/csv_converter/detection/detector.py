@@ -4,9 +4,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 from csv_converter.reader.csv_document import CSVDocument
-from csv_converter.parsers.binance.trade import BinanceTradeParser
-from csv_converter.parsers.kraken.transaction import KrakenTransactionParser
-from csv_converter.parsers.bank_of_england.exchange_rate import BankOfEnglandUSDtoGBP
+from csv_converter.parsers.binance.parser import BinanceTradeParser
+from csv_converter.parsers.kraken.parser import KrakenTransactionParser
+from csv_converter.parsers.bank_of_england.parser import BankOfEnglandUSDtoGBPParser
+from csv_converter.parsers.binance_klines.parser import BinanceKlineParser
 
 class CSVParser(Protocol):
 
@@ -20,7 +21,8 @@ class CSVFormatDetector:
         self.parsers = [
             BinanceTradeParser(),
             KrakenTransactionParser(),
-            BankOfEnglandUSDtoGBP()
+            BankOfEnglandUSDtoGBPParser(),
+            BinanceKlineParser()
         ]
 
     def detect(self, document: CSVDocument) -> CSVParser:

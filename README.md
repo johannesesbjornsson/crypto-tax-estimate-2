@@ -48,5 +48,6 @@ python3 python/download-kline.py \
     -i 1h \
     -startDate 2022-01-01 \
     -endDate 2026-05-01 \
+    -skip-daily 1 \
     -folder /Users/johannesesbjornsson/Documents/workspace/crypto-tax-estimate-2/downloaded_files/marketdata/
 ```
