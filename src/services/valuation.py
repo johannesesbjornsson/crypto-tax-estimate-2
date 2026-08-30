@@ -57,6 +57,17 @@ class ValuationService:
             timestamp=income.timestamp,
         )
 
+        if market_price is None:
+            raise ValueError(
+                f"No market price found for {income.asset}/USDT "
+                f"at {income.timestamp}"
+            )
+        
+        if exchange_rate is None:
+            raise ValueError(
+                f"No exchange rate found for "
+                f"{self.fiat_currency}/USD at {income.timestamp}"
+            )
         fiat_value = income.amount * (market_price.price/exchange_rate.exchange_rate)
 
         return ValuatedIncome(

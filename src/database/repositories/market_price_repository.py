@@ -54,10 +54,7 @@ class MarketPriceRepository(MarketPriceProvider):
 
         return MarketPrice(
             timestamp=model.timestamp,
-            source=Source(
-                venue="tmp",
-                source_file="tmp",
-            ),
+            source=None,
             asset=model.asset,
             quote_currency=model.quote_currency,
             interval=model.interval,

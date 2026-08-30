@@ -51,10 +51,7 @@ class ExchangeRateRepository(ExchangeRateProvider):
 
         return ExchangeRate(
             timestamp=model.timestamp,
-            source=Source(
-                venue="tmp",
-                source_file="tmp",
-            ),
+            source=None,
             from_currency=model.from_currency,
             to_currency=model.to_currency,
             exchange_rate=model.rate,

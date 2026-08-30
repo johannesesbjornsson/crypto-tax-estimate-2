@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from decimal import Decimal
 
-from domain.models.exchange_rate import MarketPrice, ExchangeRate
+from domain.models.exchange_rate import ExchangeRate
 
 class ExchangeRateProvider(ABC):
 
