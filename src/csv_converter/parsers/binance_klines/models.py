@@ -15,3 +15,6 @@ class BinanceKline:
     number_of_trades: int
     taker_buy_base_asset_volume: Decimal
     taker_buy_quote_asset_volume: Decimal
+    source_file: str
+    asset: str
+    quote_currency: str

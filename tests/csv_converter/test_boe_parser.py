@@ -6,7 +6,7 @@ from csv_converter.parsers.bank_of_england.exchange_rate import BankOfEnglandUSD
 from domain.models.exchange_rate import ExchangeRate
 
 
-def test_kraken_parser():
+def test_bank_of_england_parser():
     file_path = Path("tests/csv_converter/sample_csv/boe_database.csv")
 
     reader = CSVReader()

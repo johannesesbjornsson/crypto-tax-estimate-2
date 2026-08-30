@@ -5,6 +5,7 @@ CREATE TABLE market_prices (
     quote_currency VARCHAR(10) NOT NULL,
     price NUMERIC(38, 18) NOT NULL,
     source VARCHAR(50) NOT NULL,
+    interval VARCHAR(20) NOT NULL,
 
     UNIQUE (timestamp, asset, quote_currency, source)
 );
