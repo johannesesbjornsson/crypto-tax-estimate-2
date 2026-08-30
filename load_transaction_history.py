@@ -14,19 +14,8 @@ def main():
     csv_files = [
         Path("downloaded_files/kraken_2023-2024.csv"),
         Path("downloaded_files/binance_2023-2024.csv"),
-        #Path("downloaded_files/Bank of England  Database.csv")
     ]
     
-
-    
-
-
-
-    
-    
-
-
-    # Write to database
     session = get_session()
     for csv_file in csv_files:
         reader = CSVReader()
