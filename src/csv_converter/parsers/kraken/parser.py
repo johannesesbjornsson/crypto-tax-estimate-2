@@ -84,6 +84,9 @@ class KrakenTransactionParser:
                     skipped_transactions += 1
                     pening_insert[row['refid']] = row
             elif row['type'] == "staking" or row['type'] == "earn":
+                if row['subtype'] == "migration":
+                    skipped_transactions += 1
+                    continue
                 transaction = KrakenStaking(
                     tx_id=row['txid'],
                     ref_id=row['refid'],

@@ -8,7 +8,7 @@ from csv_converter.reader.csv_reader import CSVReader
 from csv_converter.detection.detector import CSVFormatDetector
 
 from database.session import get_session
-from database.repositories.exchange_rate_repository import ExchangeRateRepository
+from database.repositories.market_price_repository import MarketPriceRepository
 import re
 
 def main():
@@ -23,7 +23,7 @@ def main():
 
     
     session = get_session()
-    repository = ExchangeRateRepository(session)
+    repository = MarketPriceRepository(session)
     try:
         for zip_file in zip_files:
             with zipfile.ZipFile(zip_file, "r") as archive:
