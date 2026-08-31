@@ -16,14 +16,6 @@ def main():
     ]
     
 
-    
-
-
-
-    
-    
-
-
     # Write to database
     session = get_session()
     for csv_file in csv_files:

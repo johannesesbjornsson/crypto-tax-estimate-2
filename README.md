@@ -25,7 +25,7 @@ psql "postgresql://postgres:password@localhost:5432/crypto_tax"
 ```
 pytest tests/
 ```
-python load_transaction_history.py; python load_marketdata.py; python load_exchange_rate.py;
+python load_currencies.py; python load_marketdata.py; python load_exchange_rate.py; python load_transaction_history.py;
 ```
 
 ```
@@ -48,7 +48,7 @@ cd binance-public-data
 pip install -r python/requirements.txt
 python3 python/download-kline.py \
     -t spot \
-    -s BTCUSDT ETHUSDT SOLUSDT \
+    -s BTCUSDT ETHUSDT SOLUSDT NEARUSDT AVAXUSDT DOTUSDT POLUSDT MATICUSDT ROSEUSDT EGLDUSDT \
     -i 1h \
     -startDate 2022-01-01 \
     -endDate 2026-05-01 \

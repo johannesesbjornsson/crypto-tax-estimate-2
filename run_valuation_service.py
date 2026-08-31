@@ -9,7 +9,9 @@ from csv_converter.detection.detector import CSVFormatDetector
 from database.session import get_session
 from database.repositories.market_price_repository import MarketPriceRepository
 from database.repositories.exchange_rate_repository import ExchangeRateRepository
+from database.repositories.currency_repository import CurrencyRepository
 from services.valuation import ValuationService
+from domain.models.currencies import Currency
 
 from domain.models.transaction import (
     Transaction,
@@ -23,17 +25,21 @@ def main():
         Path("downloaded_files/kraken_2023-2024.csv"),
         Path("downloaded_files/binance_2023-2024.csv"),
     ]
+    gbp_currency = Currency("GBP", "British Pound")
+
     
 
 
     session = get_session()
     md_repository = MarketPriceRepository(session)
     exchange_rate_repository = ExchangeRateRepository(session)
+    currency_repository = CurrencyRepository(session)
 
     vaulation_service = ValuationService(
-        fiat_currency="GBP",
+        fiat_currency=gbp_currency,
         market_price_provider=md_repository,
-        exchange_rate_provider=exchange_rate_repository
+        exchange_rate_provider=exchange_rate_repository,
+        currency_provider=currency_repository
     )
     
     # Write to database
@@ -52,13 +58,22 @@ def main():
             for txn in transactions:
                 if not isinstance(txn, Income) and not isinstance(txn, Trade):
                     continue
-                if isinstance(txn, Trade):
-                    continue
-                if txn.asset  != "SOL":
-                    continue
+                #try:
+                #    if txn.asset  != "SOL":
+                #        continue
+                #except Exception as e:
+                #    pass
+                #try:
+                #    if txn.to_asset  != "SOL" and txn.from_asset != "SOL":
+                #        continue
+                #except Exception as e:
+                #    pass
 
-                valuated_txn = vaulation_service.value_transaction(txn)
-                print(valuated_txn)
+                try:
+                    valuated_txn = vaulation_service.value_transaction(txn)
+                    print(valuated_txn)
+                except Exception as e:
+                    print(e)
 
 
 

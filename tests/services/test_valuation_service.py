@@ -4,9 +4,8 @@ from decimal import Decimal
 import pytest
 
 from domain.models.exchange_rate import ExchangeRate, MarketPrice
-from domain.models.source import Source
+from domain.models.currencies import CryptoAsset, Currency, Stablecoin
 from domain.models.transaction import Income
-from domain.models.valuation import ValuatedIncome
 from services.valuation import ValuationService
 
 
@@ -57,6 +56,48 @@ class FakeExchangeRateProvider:
         )
 
 
+
+class FakeCurrencyProvider:
+
+    def __init__(
+        self,
+        currencies: list[Currency],
+        crypto_assets: list[CryptoAsset],
+        stable_coins: list[Stablecoin],
+    ):
+        self._fiat_currencies = {
+            currency.code: currency
+            for currency in currencies
+        }
+
+        self._crypto_assets = {
+            asset.code: asset
+            for asset in crypto_assets
+        }
+
+        self._stablecoins = {
+            stablecoin.code: stablecoin
+            for stablecoin in stable_coins
+        }
+
+    def is_fiat(self, currency_code: str) -> bool:
+        return currency_code in self._fiat_currencies
+
+    def is_stablecoin(self, currency_code: str) -> bool:
+        return currency_code in self._stablecoins
+
+    def is_crypto_asset(self, currency_code: str) -> bool:
+        return currency_code in self._crypto_assets
+
+    def get_fiat_currency(self, currency_code: str) -> Currency | None:
+        return self._fiat_currencies.get(currency_code)
+
+    def get_stablecoin(self, currency_code: str) -> Stablecoin | None:
+        return self._stablecoins.get(currency_code)
+
+    def get_crypto_asset(self, currency_code: str) -> CryptoAsset | None:
+        return self._crypto_assets.get(currency_code)
+
 @pytest.fixture
 def valuation_service():
     market_prices = [
@@ -87,11 +128,26 @@ def valuation_service():
             exchange_rate=Decimal("1.25"),
         ),
     ]
+    currencies = [
+        Currency(code="USD", name="US Dollar"),
+        Currency(code="GBP", name="British Pound")
+    ]
+    crypto_assets = [
+        CryptoAsset(code="SOL", name="Solana"),
+        CryptoAsset(code="BTC", name="Bitcoin"),
+        CryptoAsset(code="ETH", name="Ethereum"),
+        CryptoAsset(code="ADA", name="Cardano")
+
+    ]
+    stable_coins = [
+        Stablecoin(code="USDT",peg_currency_code="USD",peg_ratio=Decimal(1),active=True)
+    ]
 
     return ValuationService(
-        fiat_currency="GBP",
+        fiat_currency=Currency(code="GBP", name="British Pound"),
         market_price_provider=FakeMarketPriceProvider(market_prices),
         exchange_rate_provider=FakeExchangeRateProvider(exchange_rates),
+        currency_provider=FakeCurrencyProvider(stable_coins=stable_coins, currencies=currencies, crypto_assets=crypto_assets)
     )
 
 def test_income(valuation_service):
