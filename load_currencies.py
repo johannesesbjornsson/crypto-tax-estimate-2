@@ -21,9 +21,18 @@ def main():
         CryptoAsset(code="SOL", name="Solana"),
         CryptoAsset(code="BTC", name="Bitcoin"),
         CryptoAsset(code="ETH", name="Ethereum"),
-        CryptoAsset(code="ADA", name="Cardano")
+        CryptoAsset(code="NEAR", name="Near Protocol"),
+        CryptoAsset(code="AVAX", name="Avalanche"),
+        CryptoAsset(code="DOT", name="Polkadot"),
+        CryptoAsset(code="POL", name="Polygon"),
+        CryptoAsset(code="MATIC", name="Polygon"),
+        CryptoAsset(code="ARB", name="Arbitrum"),
+        CryptoAsset(code="OP", name="Optimism"),
+        CryptoAsset(code="ROSE", name="Oasis"),
+        CryptoAsset(code="EGLD", name="Elrond"),
 
     ]
+
     stable_coins = [
         Stablecoin(code="USDT",peg_currency_code="USD",peg_ratio=Decimal(1),active=True),
         Stablecoin(code="BUSD",peg_currency_code="USD",peg_ratio=Decimal(1),active=True),

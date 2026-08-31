@@ -48,7 +48,7 @@ cd binance-public-data
 pip install -r python/requirements.txt
 python3 python/download-kline.py \
     -t spot \
-    -s BTCUSDT ETHUSDT SOLUSDT \
+    -s BTCUSDT ETHUSDT SOLUSDT NEARUSDT AVAXUSDT DOTUSDT POLUSDT MATICUSDT ROSEUSDT EGLDUSDT \
     -i 1h \
     -startDate 2022-01-01 \
     -endDate 2026-05-01 \

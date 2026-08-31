@@ -1,13 +1,12 @@
 from datetime import datetime
 
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from domain.models.exchange_rate import MarketPrice
-
-from database.models.market_price import MarketPriceModel
 from domain.providers.market_price_provider import MarketPriceProvider
 
+from database.models.market_price import MarketPriceModel
 
 
 class MarketPriceRepository(MarketPriceProvider):
@@ -17,8 +16,8 @@ class MarketPriceRepository(MarketPriceProvider):
 
     def save(self, rate: MarketPrice):
         market_price = MarketPriceModel(
-            asset=rate.asset,
-            quote_currency=rate.quote_currency,
+            asset_code=rate.asset,
+            quote_currency_code=rate.quote_currency,
             price=rate.price,
             timestamp=rate.timestamp,
             interval=rate.interval,
@@ -37,8 +36,8 @@ class MarketPriceRepository(MarketPriceProvider):
         statement = (
             select(MarketPriceModel)
             .where(
-                MarketPriceModel.asset == asset,
-                MarketPriceModel.quote_currency == quote_currency,
+                MarketPriceModel.asset_code == asset,
+                MarketPriceModel.quote_currency_code == quote_currency,
                 MarketPriceModel.interval == "1h",
                 MarketPriceModel.timestamp <= timestamp,
             )
@@ -54,8 +53,8 @@ class MarketPriceRepository(MarketPriceProvider):
         return MarketPrice(
             timestamp=model.timestamp,
             source=None,
-            asset=model.asset,
-            quote_currency=model.quote_currency,
+            asset=model.asset_code,
+            quote_currency=model.quote_currency_code,
             interval=model.interval,
             price=model.price,
         )

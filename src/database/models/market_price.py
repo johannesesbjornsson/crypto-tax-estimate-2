@@ -1,11 +1,13 @@
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import Numeric, String, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import DateTime, ForeignKey, Numeric, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database.base import Base
-
+from database.models.crypto_asset import CryptoAssetModel
+from database.models.stablecoin import StablecoinModel
+from database.models.currency import CurrencyModel
 
 
 class MarketPriceModel(Base):
@@ -16,13 +18,15 @@ class MarketPriceModel(Base):
         autoincrement=True,
     )
 
-    asset: Mapped[str] = mapped_column(
+    asset_code: Mapped[str] = mapped_column(
         String(20),
+        ForeignKey("crypto_assets.code"),
         nullable=False,
     )
 
-    quote_currency: Mapped[str] = mapped_column(
+    quote_currency_code: Mapped[str] = mapped_column(
         String(20),
+        ForeignKey("stablecoins.code"),
         nullable=False,
     )
 
@@ -44,4 +48,12 @@ class MarketPriceModel(Base):
     timestamp: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
+    )
+
+    asset: Mapped["CryptoAssetModel"] = relationship(
+        "CryptoAssetModel",
+    )
+
+    quote_currency: Mapped["StablecoinModel"] = relationship(
+        "StablecoinModel",
     )

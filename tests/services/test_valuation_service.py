@@ -56,13 +56,47 @@ class FakeExchangeRateProvider:
         )
 
 
+
 class FakeCurrencyProvider:
 
-    def __init__(self, currencies: list[Currency], crypto_assets: list[CryptoAsset], stable_coins: list[Stablecoin]):
-        self.currencies = currencies
-        self.crypto_assets = crypto_assets
-        self.stable_coins = stable_coins
+    def __init__(
+        self,
+        currencies: list[Currency],
+        crypto_assets: list[CryptoAsset],
+        stable_coins: list[Stablecoin],
+    ):
+        self._fiat_currencies = {
+            currency.code: currency
+            for currency in currencies
+        }
 
+        self._crypto_assets = {
+            asset.code: asset
+            for asset in crypto_assets
+        }
+
+        self._stablecoins = {
+            stablecoin.code: stablecoin
+            for stablecoin in stable_coins
+        }
+
+    def is_fiat(self, currency_code: str) -> bool:
+        return currency_code in self._fiat_currencies
+
+    def is_stablecoin(self, currency_code: str) -> bool:
+        return currency_code in self._stablecoins
+
+    def is_crypto_asset(self, currency_code: str) -> bool:
+        return currency_code in self._crypto_assets
+
+    def get_fiat_currency(self, currency_code: str) -> Currency | None:
+        return self._fiat_currencies.get(currency_code)
+
+    def get_stablecoin(self, currency_code: str) -> Stablecoin | None:
+        return self._stablecoins.get(currency_code)
+
+    def get_crypto_asset(self, currency_code: str) -> CryptoAsset | None:
+        return self._crypto_assets.get(currency_code)
 
 @pytest.fixture
 def valuation_service():
@@ -110,7 +144,7 @@ def valuation_service():
     ]
 
     return ValuationService(
-        fiat_currency="GBP",
+        fiat_currency=Currency(code="GBP", name="British Pound"),
         market_price_provider=FakeMarketPriceProvider(market_prices),
         exchange_rate_provider=FakeExchangeRateProvider(exchange_rates),
         currency_provider=FakeCurrencyProvider(stable_coins=stable_coins, currencies=currencies, crypto_assets=crypto_assets)
