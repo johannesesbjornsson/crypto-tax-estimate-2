@@ -25,7 +25,7 @@ psql "postgresql://postgres:password@localhost:5432/crypto_tax"
 ```
 pytest tests/
 ```
-python load_transaction_history.py; python load_marketdata.py; python load_exchange_rate.py;
+python load_currencies.py; python load_marketdata.py; python load_exchange_rate.py; python load_transaction_history.py;
 ```
 
 ```

@@ -4,7 +4,6 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from domain.models.exchange_rate import ExchangeRate
-from domain.models.source import Source
 from domain.providers.exchange_rate_provider import ExchangeRateProvider
 
 from database.models.exchange_rate import ExchangeRateModel

@@ -8,6 +8,7 @@ from domain.models.transaction import (
 
 from domain.providers.exchange_rate_provider import ExchangeRateProvider
 from domain.providers.market_price_provider import MarketPriceProvider
+from domain.providers.currency_provider import CurrencyProvider
 
 
 from domain.models.valuation import (
@@ -25,10 +26,12 @@ class ValuationService:
             fiat_currency: str,
             market_price_provider: MarketPriceProvider,
             exchange_rate_provider: ExchangeRateProvider,
+            currency_provider: CurrencyProvider,
         ):
         self.fiat_currency = fiat_currency
         self.market_price_provider = market_price_provider
         self.exchange_rate_provider = exchange_rate_provider
+        self.currency_provider = currency_provider
 
     def value_transaction(self, transaction: Transaction):
         if isinstance(transaction, Trade):

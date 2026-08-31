@@ -4,9 +4,8 @@ from decimal import Decimal
 import pytest
 
 from domain.models.exchange_rate import ExchangeRate, MarketPrice
-from domain.models.source import Source
+from domain.models.currencies import CryptoAsset, Currency, Stablecoin
 from domain.models.transaction import Income
-from domain.models.valuation import ValuatedIncome
 from services.valuation import ValuationService
 
 
@@ -57,6 +56,14 @@ class FakeExchangeRateProvider:
         )
 
 
+class FakeCurrencyProvider:
+
+    def __init__(self, currencies: list[Currency], crypto_assets: list[CryptoAsset], stable_coins: list[Stablecoin]):
+        self.currencies = currencies
+        self.crypto_assets = crypto_assets
+        self.stable_coins = stable_coins
+
+
 @pytest.fixture
 def valuation_service():
     market_prices = [
@@ -87,11 +94,26 @@ def valuation_service():
             exchange_rate=Decimal("1.25"),
         ),
     ]
+    currencies = [
+        Currency(code="USD", name="US Dollar"),
+        Currency(code="GBP", name="British Pound")
+    ]
+    crypto_assets = [
+        CryptoAsset(code="SOL", name="Solana"),
+        CryptoAsset(code="BTC", name="Bitcoin"),
+        CryptoAsset(code="ETH", name="Ethereum"),
+        CryptoAsset(code="ADA", name="Cardano")
+
+    ]
+    stable_coins = [
+        Stablecoin(code="USDT",peg_currency_code="USD",peg_ratio=Decimal(1),active=True)
+    ]
 
     return ValuationService(
         fiat_currency="GBP",
         market_price_provider=FakeMarketPriceProvider(market_prices),
         exchange_rate_provider=FakeExchangeRateProvider(exchange_rates),
+        currency_provider=FakeCurrencyProvider(stable_coins=stable_coins, currencies=currencies, crypto_assets=crypto_assets)
     )
 
 def test_income(valuation_service):

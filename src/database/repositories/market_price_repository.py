@@ -7,7 +7,6 @@ from domain.models.exchange_rate import MarketPrice
 
 from database.models.market_price import MarketPriceModel
 from domain.providers.market_price_provider import MarketPriceProvider
-from domain.models.source import Source
 
 
 

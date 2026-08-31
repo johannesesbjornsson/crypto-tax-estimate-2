@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from decimal import Decimal
 
 from domain.models.exchange_rate import ExchangeRate
 

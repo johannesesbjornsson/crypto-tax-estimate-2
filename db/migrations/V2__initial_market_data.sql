@@ -32,29 +32,26 @@ CREATE INDEX idx_exchange_rates_lookup
 CREATE TABLE currencies (
     code VARCHAR(10) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    type VARCHAR(20) NOT NULL
-);
 
-INSERT INTO currencies (code, name, type)
-VALUES
-    ('USD', 'US Dollar', 'FIAT'),
-    ('GBP', 'British Pound', 'FIAT'),
-    ('EUR', 'Euro', 'FIAT');
+    UNIQUE (code)
+);
 
 
 CREATE TABLE stablecoins (
-    asset VARCHAR(20) PRIMARY KEY,
+    code VARCHAR(20) PRIMARY KEY,
     peg_currency VARCHAR(10) NOT NULL,
     peg_ratio NUMERIC(38, 18) NOT NULL DEFAULT 1,
     active BOOLEAN NOT NULL DEFAULT TRUE,
 
+    UNIQUE (code),
     FOREIGN KEY (peg_currency)
         REFERENCES currencies(code)
 );
-INSERT INTO stablecoins (asset, peg_currency, peg_ratio)
-VALUES
-    ('USDT', 'USD', 1),
-    ('USDC', 'USD', 1),
-    ('BUSD', 'USD', 1),
-    ('DAI',  'USD', 1),
-    ('FDUSD', 'USD', 1);
+
+
+CREATE TABLE crypto_assets (
+    code VARCHAR(10) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+
+    UNIQUE (code)
+);
