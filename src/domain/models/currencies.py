@@ -18,3 +18,8 @@ class CryptoAsset:
     code: str
     name: str
 
+@dataclass
+class WrappedCryptoAsset:
+    code: str
+    name: str
+    underlying_asset_code: str

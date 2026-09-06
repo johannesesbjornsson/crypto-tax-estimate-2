@@ -5,7 +5,7 @@ import zipfile
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from domain.models.currencies import Currency, Stablecoin, CryptoAsset
+from domain.models.currencies import Currency, Stablecoin, CryptoAsset, WrappedCryptoAsset
 
 from database.session import get_session
 from database.repositories.currency_repository import CurrencyRepository
@@ -32,6 +32,9 @@ def main():
         CryptoAsset(code="EGLD", name="Elrond"),
 
     ]
+    wrapped_crypto_assets = [
+        WrappedCryptoAsset(code="BETH", name="Binance Staked ETH", underlying_asset_code="ETH")
+    ]
 
     stable_coins = [
         Stablecoin(code="USDT",peg_currency_code="USD",peg_ratio=Decimal(1),active=True),
@@ -55,6 +58,9 @@ def main():
 
         for stable_coin in stable_coins:
             repository.save_stable_coin(stable_coin)
+
+        for wrapped_asset in wrapped_crypto_assets:
+            repository.save_wrapped_crypto_asset(wrapped_asset)
 
         repository.commit()
 
