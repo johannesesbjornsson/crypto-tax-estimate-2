@@ -20,6 +20,14 @@ CREATE TABLE crypto_assets (
     name VARCHAR(100) NOT NULL
 );
 
+CREATE TABLE wrapped_crypto_assets (
+    code VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    underlying_asset VARCHAR(20) NOT NULL,
+
+    FOREIGN KEY (underlying_asset)
+        REFERENCES crypto_assets(code)
+);
 
 CREATE TABLE market_prices (
     id BIGSERIAL PRIMARY KEY,

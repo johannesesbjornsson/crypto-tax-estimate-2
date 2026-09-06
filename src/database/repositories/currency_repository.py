@@ -4,8 +4,9 @@ from sqlalchemy.orm import Session
 from database.models.currency import CurrencyModel
 from database.models.stablecoin import StablecoinModel
 from database.models.crypto_asset import CryptoAssetModel
+from database.models.wrapped_crypto_asset import WrappedCryptoAssetModel
 
-from domain.models.currencies import Currency, Stablecoin, CryptoAsset
+from domain.models.currencies import Currency, Stablecoin, CryptoAsset, WrappedCryptoAsset
 from domain.providers.currency_provider import CurrencyProvider
 
 
@@ -17,13 +18,12 @@ class CurrencyRepository(CurrencyProvider):
         self._fiat_currencies: dict[str, Currency] = {}
         self._stablecoins: dict[str, Stablecoin] = {}
         self._crypto_assets: dict[str, CryptoAsset] = {}
+        self._wrapped_crypto_assets: dict[str, WrappedCryptoAsset] = {}
 
         self._load_currencies()
 
     def _load_currencies(self) -> None:
-        fiat_models = self.session.scalars(
-            select(CurrencyModel)
-        ).all()
+        fiat_models = self.session.scalars(select(CurrencyModel)).all()  # type: ignore
 
         self._fiat_currencies = {
             model.code: Currency(
@@ -33,9 +33,7 @@ class CurrencyRepository(CurrencyProvider):
             for model in fiat_models
         }
 
-        stablecoin_models = self.session.scalars(
-            select(StablecoinModel)
-        ).all()
+        stablecoin_models = self.session.scalars(select(StablecoinModel)).all() # type: ignore
 
         self._stablecoins = {
             model.code: Stablecoin(
@@ -60,14 +58,41 @@ class CurrencyRepository(CurrencyProvider):
             for model in crypto_models
         }
 
+        # Crypto assets
+        wrapped_crypto_models = self.session.scalars(
+            select(WrappedCryptoAssetModel)
+        ).all()
+
+        self._wrapped_crypto_assets = {
+            model.code: WrappedCryptoAsset(
+                code=model.code,
+                name=model.name,
+                underlying_asset_code=model.underlying_asset_code
+            )
+            for model in wrapped_crypto_models
+        }
+
     def is_fiat(self, currency_code: str) -> bool:
         return currency_code in self._fiat_currencies
 
-    def is_stablecoin(self, currency_code: str) -> bool:
+    def is_stablecoin(self, currency_code: str) -> bool: 
         return currency_code in self._stablecoins
 
-    def is_crypto_asset(self, currency_code: str) -> bool:
-        return currency_code in self._crypto_assets
+    def is_crypto_asset(self, currency_code: str) -> bool: 
+        all_assets = self._crypto_assets | self._wrapped_crypto_assets
+
+        return currency_code in all_assets
+
+    def is_wrapped_crypto_asset(self, currency_code: str) -> bool: 
+        return currency_code in self._wrapped_crypto_assets
+
+    def get_underlying_asset(self, wrapped_crypto_asset_code: str) -> CryptoAsset:
+        underlying_asset = self._wrapped_crypto_assets.get(wrapped_crypto_asset_code)
+        if underlying_asset is None:
+            raise ValueError(f"No crypto asset found {wrapped_crypto_asset_code}")
+        
+        return underlying_asset
+
 
     def get_fiat_currency(self, currency_code: str) -> Currency | None:
         return self._fiat_currencies.get(currency_code)
@@ -97,6 +122,17 @@ class CurrencyRepository(CurrencyProvider):
         self.session.add(model)
 
         self._crypto_assets[asset.code] = asset
+
+    def save_wrapped_crypto_asset(self, wrapped_asset: WrappedCryptoAsset) -> None:
+        model = WrappedCryptoAssetModel(
+            code=wrapped_asset.code,
+            name=wrapped_asset.name,
+            underlying_asset_code=wrapped_asset.underlying_asset_code
+        )
+
+        self.session.add(model)
+        self._wrapped_crypto_assets[wrapped_asset.code] = wrapped_asset
+
 
     def save_stable_coin(self, stable_coin: Stablecoin) -> None:
         model = StablecoinModel(

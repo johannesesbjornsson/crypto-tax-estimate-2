@@ -50,6 +50,13 @@ class ValuationService:
             )
   
 
+    def _get_priced_asset(self, asset_code: str) -> str:
+        if self.currency_provider.is_wrapped_crypto_asset(asset_code):
+            wrapped_asset = self.currency_provider.get_underlying_asset(asset_code)
+            if wrapped_asset is None:
+                raise ValueError(f"Unable to find wrapped asset {asset_code}")
+            return wrapped_asset.underlying_asset_code
+        return asset_code
 
     def _process_income(self, income: Income) -> ValuatedIncome:
         if self.currency_provider.is_crypto_asset(income.asset):
@@ -59,9 +66,9 @@ class ValuationService:
         else:
             raise ValueError(f"Unknown asset: {income.asset}")
         
-        
+        asset_code = self._get_priced_asset(income.asset)
         market_price = self.market_price_provider.get_price(
-            asset=income.asset,
+            asset=asset_code,
             quote_currency="USDT",
             timestamp=income.timestamp,
         )
@@ -157,8 +164,9 @@ class ValuationService:
 
     def _process_disposal(self, trade: Trade) -> Disposal:
         if self.currency_provider.is_crypto_asset(trade.from_asset):
+            asset_code = self._get_priced_asset(trade.from_asset)
             market_price = self.market_price_provider.get_price(
-                asset=trade.from_asset,
+                asset=asset_code,
                 quote_currency="USDT",
                 timestamp=trade.timestamp,
             )
@@ -232,8 +240,9 @@ class ValuationService:
         if not self.currency_provider.is_crypto_asset(trade.to_asset):
             raise ValueError(f"Unable to swap to non-crypto asset {trade.to_asset}")
 
+        asset_code = self._get_priced_asset(trade.from_asset)
         market_price = self.market_price_provider.get_price(
-            asset=trade.from_asset,
+            asset=asset_code,
             quote_currency="USDT",
             timestamp=trade.timestamp,
         )

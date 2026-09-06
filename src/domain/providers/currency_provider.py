@@ -13,6 +13,9 @@ class CurrencyProvider(ABC):
     def is_stablecoin(self, currency: str) -> bool:
         ...
 
+    def is_wrapped_crypto_asset(self, currency: str) -> bool:
+        ...
+
     @abstractmethod
     def is_crypto_asset(self, currency: str) -> bool:
         ...
